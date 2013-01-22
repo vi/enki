@@ -420,7 +420,7 @@ class IndentHelper:
     
 
 class AbstractTextEditor(AbstractDocument):
-    """Base class for text editors. Currently, only QScintilla is supported, but, we may replace it in the future
+    """Base class for text editors.
     """
     
     cursorPositionChanged = pyqtSignal(int, int)
