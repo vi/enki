@@ -1,3 +1,9 @@
+enki (v13.06.0-1~ppa1) lucid; urgency=low
+
+  * Using Qutepart as text editor component
+
+ -- Andrei Kopats <hlamer@tut.by>  Thu, 06 Jun 2013 08:09:07 +0300
+
 enki (12.08.5-1~ppa1) lucid; urgency=low
 
   * Experimental appmenu crash fix
