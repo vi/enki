@@ -225,7 +225,7 @@ class TestCase(unittest.TestCase):
     def sleepProcessEvents(self, delay):
         end = time.time() + delay
         while time.time() < end:
-            QApplication.instance().processEvents()
+            self.app.processEvents()
             time.sleep(0.01)
 
     def findDock(self, windowTitle):
