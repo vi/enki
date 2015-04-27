@@ -30,6 +30,47 @@ def getSessionFilePath():
 
     return os.path.join(CONFIG_DIR, session_filename)
 
+def getSocketFilePath():
+    return getSessionFilePath().replace(".json",".socket")
+
+def openSessionSocket(sfp):
+    import socket
+    try:
+        os.unlink(sfp)
+    except OSError:
+        if os.path.exists(sfp):
+            raise
+    sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    sock.bind(sfp);
+    sock.listen(2);
+    return sock;
+
+def sessionSocketListener():
+    from PyQt4.QtCore import QObject, pyqtSignal
+    import socket
+    class Foo(QObject):
+        qqq = pyqtSignal(['QString'])
+    f = Foo()
+    f.qqq.connect(core.workspace().openFile);
+    
+    sock = openSessionSocket (getSocketFilePath())
+
+    while True:
+        connection, client_address = sock.accept()
+        try:
+            data = connection.recv(4096)
+            if data:
+                if (data.startswith("open ")):
+                    f.qqq.emit(data[5:])
+        finally:
+            # Clean up the connection
+            connection.close()
+
+
+def startSessionSocketListener():
+    import thread;
+    thread.start_new_thread(sessionSocketListener, ())
+
 
 _SESSION_FILE_PATH = getSessionFilePath()
 
@@ -39,6 +80,9 @@ class Plugin:
     def __init__(self):
         core.restoreSession.connect(self._onRestoreSession)
         core.aboutToTerminate.connect(self._onAboutToTerminate)
+
+        startSessionSocketListener()
+
 
     def del_(self):
         """Explicitly called destructor

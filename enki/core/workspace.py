@@ -25,7 +25,7 @@ from PyQt4.QtGui import QAction, \
                         QMessageBox, \
                         QStackedWidget, \
                         QShortcut
-from PyQt4.QtCore import pyqtSignal, QEvent, Qt  # pylint: disable=E0611
+from PyQt4.QtCore import pyqtSignal, pyqtSlot, QEvent, Qt  # pylint: disable=E0611
 from PyQt4 import uic
 
 from enki.core.core import core, DATA_FILES_PATH
@@ -555,6 +555,7 @@ class Workspace(QStackedWidget):
 
         return document
 
+    @pyqtSlot(str)
     def openFile(self, filePath):
         """Open file.
 
